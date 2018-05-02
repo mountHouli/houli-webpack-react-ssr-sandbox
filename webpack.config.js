@@ -10,6 +10,8 @@ const { removeEmpty } = require('webpack-config-utils')
 
 const { NODE_ENV } = process.env
 
+// Add include dir to all module entries.  Ex, for `test: /\.css$/`
+
 const deploymentLevelSpecificConfigs = {
   client: {
     entry: {
@@ -122,7 +124,11 @@ const clientConfig = removeEmpty({
   resolve: {
     // Make the webpack resolver look for .jsx files (in addition to defaults),
     // so you can import a .jsx file without specifying the extension
-    extensions: ['.js', '.json', '.jsx']
+    extensions: ['.js', '.json', '.jsx'],
+    alias: {
+      Components: path.resolve(__dirname, 'src/components'),
+      Styles: path.resolve(__dirname, 'src/styles')
+    }
   },
   plugins: removeEmpty([
     new CleanWebpackPlugin(
@@ -143,8 +149,8 @@ const clientConfig = removeEmpty({
     ),
     new CopyWebpackPlugin([
       // The 'to:' paths are relative to the 'output.path:' directory
-      {from: 'src/server.js', to: '../server.js'},
-      {from: 'src/config.js', to: '../config.js'}
+      { from: 'src/server.js', to: '../server.js' },
+      { from: 'src/config.js', to: '../config.js' }
     ]),
     // THIS IS NOT USED BY THE APP WHATSOEVER.  I am only using it to generate index.html
     // to see what webpack is automatically doing, so that I can manually replicate
@@ -203,7 +209,11 @@ const ssrConfig = removeEmpty({
   resolve: {
     // Make the webpack resolver look for .jsx files (in addition to defaults),
     // so you can import a .jsx file without specifying the extension
-    extensions: ['.js', '.json', '.jsx']
+    extensions: ['.js', '.json', '.jsx'],
+    alias: {
+      Components: path.resolve(__dirname, 'src/components'),
+      Styles: path.resolve(__dirname, 'src/styles')
+    }
   },
   plugins: [
     // See README.md for explanation of prod and dev, client and ssr/server style/css -related config.
